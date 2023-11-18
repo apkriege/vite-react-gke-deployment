@@ -1,31 +1,69 @@
-# React + TypeScript + Vite
+# React + TypeScript + Vite + GKE
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This template provides a minimal setup to get React working in Vite and has all the necessary scripts to build and deploy to a GKE cluster. 
 
-Currently, two official plugins are available:
+## Setup 
+1. Install dependencies `npm install`
+2. Add and .env file from the .env.example file
+3. Make sure you have Artifact Registry and Kubernetes APIs enabled in GCP
+5. Download the gcloud CLI SDK https://cloud.google.com/sdk/docs/install
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Once you have all the above done open your terminal and do the following to connect to your project
+-  Authenticate your local machine to the GCP `gcloud auth login`
+-  Or login with application default credentials `gcloud auth application-default login` 
+   ** Note this is only for development purposes. Follow best practice on production. **
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+## GKE Setup
+Create your a cluster that will use GKE autopilot. This feature is great because it takes all the overhead off you plate.
 ```
+gcloud config set project PROJECT_ID
+```
+```
+gcloud container clusters create-auto hello-cluster \
+    --location=us-central1
+```
+Here is a reource if you want to get a better understanding. Also, it covers a few useful commands like `kubectl get pods` and `kubectl describe deployment` which will become essential to understand how the system is operating. 
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
-"# gke-vite-deployment" 
+https://cloud.google.com/kubernetes-engine/docs/deploy-app-cluster#main.go
+
+## Scripts
+The yaml files are what will create the GKE configuration and connect each resource to one another. 
+
+### deployment.yaml
+Creates a Workload. This is the logic of your application.
+  
+  ```
+  kubectl apply -f deployment.yaml
+  ```
+
+### service.yaml
+Creates a service that opens a port to connect to your workload.
+
+  ```
+  kubectl apply -f service.yaml
+  ```
+
+### ingress.yaml 
+Creates a load balancer that will expose the service to an external IP.
+
+  ```
+  kubectl apply -f ingress.yaml
+  ```
+
+### cert.yaml
+Creates a google managed certificate. Only necessary if you need to service your app over https (which you should)
+
+  ```
+  kubectl apply -f cert.yaml
+  ```
+
+*** As a general note all of these take a minute to apply and propegate so be patient. If there are errors it should explain where the disconnection is. The cert will take the longest and may take some time to provision. ***
+
+## Helpful Commands
+```
+kubectl get pods
+kubectl describe deployment <deployment-name>
+kubectl describe service <service-name>
+kubectl describe ingress <ingress-name>
+kubectl describe managedcertificate <certificate-name>
+```
