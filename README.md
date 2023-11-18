@@ -22,7 +22,7 @@ gcloud config set project PROJECT_ID
 gcloud container clusters create-auto hello-cluster \
     --location=us-central1
 ```
-Here is a reource if you want to get a better understanding. Also, it covers a few useful commands like `kubectl get pods` and `kubectl describe deployment` which will become essential to understand how the system is operating. 
+Here is a reource if you want to get a better understanding. Also, it covers a few useful commands which will become essential to understand how the system is operating. 
 
 https://cloud.google.com/kubernetes-engine/docs/deploy-app-cluster#main.go
 
