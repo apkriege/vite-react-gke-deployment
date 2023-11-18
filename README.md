@@ -29,33 +29,34 @@ https://cloud.google.com/kubernetes-engine/docs/deploy-app-cluster#main.go
 <br><br>
 
 ## Scripts
-The yaml files are what will create the GKE configuration and connect each resource to one another. 
+The yaml files are what will create the GKE configuration and connect each resource to one another. Best practice I have found is to follow the order below and upon each run the  `kubectl describe <resource>` command to verify that the state of each service gets created without error. The cert file can be run any time as it just provisions an SSL cert to your specified domains. It will take time to provision though so verify the cert is active before troubleshooting. 
 
-<span style="color: blue">deployment.yaml</span> - Creates a Workload. This is the logic of your application.
+**_deployment.yaml_** - Creates a Workload. This is the logic of your application.
   ```
   kubectl apply -f deployment.yaml
   ```
 <br>
 
-<b>service.yaml</b> - Creates a service that opens a port to connect to your workload.
+**_service.yaml_** - Creates a service that opens a port to connect to your workload.
   ```
   kubectl apply -f service.yaml
   ```
 <br>
 
-<b>ingress.yaml</b> - Creates a load balancer that will expose the service to an external IP.
+**_ingress.yaml_** - Creates a load balancer that will expose the service to an external IP.
   ```
   kubectl apply -f ingress.yaml
   ```
 <br>
 
-<b>cert.yaml</b> - Creates a google managed certificate. Only necessary if you need to service your app over https (which you should)
+**_cert.yaml_** - Creates a google managed certificate. Only necessary if you need to service your app over https (which you should)
   ```
   kubectl apply -f cert.yaml
   ```
 <br>
 
-*** As a general note all of these take a minute to apply and propegate so be patient. If there are errors it should explain where the disconnection is. The cert will take the longest and may take some time to provision. ***
+> [!NOTE]
+> As a general note all of these take a minute to apply and propegate so be patient. If there are errors it should explain where the disconnection is. The cert will take the longest and may take some time to provision. ***
 <br><br>
 
 ## Helpful Commands
