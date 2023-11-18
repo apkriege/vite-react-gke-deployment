@@ -1,8 +1,12 @@
 # React + TypeScript + Vite + GKE
 
-This template provides a minimal setup to get React working in Vite and has all the necessary scripts to build and deploy to a GKE cluster. 
+This template provides a minimal setup to get React working in Vite and has all the necessary scripts to build and deploy to a GKE cluster. I followed along with a lot of the Google documentation but had to piece most of this together from different resources. As a side note with Vite for production it is not best practice to simply run `npm run dev` which is why this soluion builds the Vite app and services it via nginx that is packged in the docker container.
 
-## Setup 
+Docs I used to understand how a simple deployment works.<br>
+https://cloud.google.com/kubernetes-engine/docs/deploy-app-cluster
+<br><br>
+
+## Local Setup 
 1. Install dependencies `npm install`
 2. Add and .env file from the .env.example file
 3. Make sure you have Artifact Registry and Kubernetes APIs enabled in GCP
