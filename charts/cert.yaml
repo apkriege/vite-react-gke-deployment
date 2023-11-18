@@ -1,0 +1,8 @@
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: portfolio-cert
+spec:
+  domains:
+    - domain.com
+    - www.domain.com

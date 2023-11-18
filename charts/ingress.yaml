@@ -1,0 +1,14 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: vite-ingress
+  annotations:
+    # Reserve a static IP address for the ingress in GCP
+    kubernetes.io/ingress.global-static-ip-name: project-ip # name of static ip
+    networking.gke.io/managed-certificates: cert-name # remove this line if you do not wisth to use a managed certificate
+spec:
+  defaultBackend:
+    service:
+      name: vite-service
+      port:
+        number: 81
